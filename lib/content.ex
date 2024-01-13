@@ -15,8 +15,8 @@ defmodule DiscordMicroblogApp.Content do
 
   def add_content(content, message_id) do
     Agent.update(__MODULE__, fn contents ->
+      entries = Map.put(contents.entries, contents.length, content)
       length = contents.length + 1
-      entries = Map.put(contents.entries, length, content)
       message_id_to_entry = Map.put(contents.message_id_to_entry, message_id, length)
       %Content{entries: entries, length: length, message_id_to_entry: message_id_to_entry}
     end)

@@ -3,8 +3,8 @@ defmodule DiscordMicroblog.Controller do
 
   def index(conn, _) do
     content = DiscordMicroblogApp.Content.get_content()
-    content_ls = Enum.map(0..content.length, fn i -> content.entries[i] end) |> Enum.filter(fn x -> x != nil end)
-    json(conn, content_ls)
+    content_ls = Enum.map((content.length-1)..0//-1, fn i -> content.entries[i] end) |> Enum.filter(fn x -> x != nil end)
+    json(conn, %{updates: content_ls})
   end
 end
 
@@ -13,6 +13,7 @@ defmodule DiscordMicroblog.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug CORSPlug
   end
 
   scope "/", DiscordMicroblog do
