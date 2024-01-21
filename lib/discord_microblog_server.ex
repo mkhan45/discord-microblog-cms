@@ -27,3 +27,12 @@ defmodule DiscordMicroblogWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :discord_microblog
   plug DiscordMicroblog.Router
 end
+
+defmodule DiscordMicroblogWeb.ErrorView do
+  def render(template, assigns) do
+    IO.puts(template)
+    IO.puts(assigns)
+    IO.puts(assigns.reason.description)
+    Phoenix.Controller.status_message_from_template(template)
+  end
+end
