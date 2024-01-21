@@ -33,16 +33,15 @@ defmodule DiscordMicroblogApp.Content do
 
   def update_content(message_id, content) do
     Agent.update(__MODULE__, fn contents ->
-      IO.inspect(message_id)
-      IO.inspect(content)
       entry_index = contents.message_indices[message_id]
-      old_entry = contents.entries[entry_index] |> IO.inspect()
-      new_entry = %Entry{old_entry | content: content, message_id: message_id} |> IO.inspect()
+      old_entry = contents.entries[entry_index]
+      new_entry = %Entry{old_entry | content: content, message_id: message_id}
       %Content{contents | entries: Map.put(contents.entries, entry_index, new_entry)}
     end)
   end
 
   def delete_content(message_id) do
+    # TODO: doesn't work
     Agent.update(__MODULE__, fn contents ->
       entry_idx = contents.message_indices[message_id]
       new_entries = 
@@ -51,8 +50,12 @@ defmodule DiscordMicroblogApp.Content do
         end)
       message_indices = 
         Enum.reduce(entry_idx+1..contents.length-1, contents.message_indices, fn idx, acc ->
+          IO.inspect(contents.entries[idx])
+          IO.inspect(acc)
           if contents.entries[idx] != nil do
             Map.put(acc, contents.entries[idx].message_id, idx-1)
+          else
+            acc
           end
         end)
 

@@ -17,11 +17,15 @@ defmodule DiscordMicroblogApp.BotConsumer do
     %{messages: messages, channel_id: channel_id}
   end
 
-  def handle_event({:READY, _ready, _}) do
+  def reinit_messages() do
     self_dms = Api.create_dm!(@self_id) |> IO.inspect
     channel_id = self_dms.id |> IO.inspect
     messages = Api.get_channel_messages!(channel_id, :infinity) |> IO.inspect
     for message <- Enum.reverse(messages), do: Content.add_content(message)
+  end
+
+  def handle_event({:READY, _ready, _}) do
+    reinit_messages()
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _}) do
@@ -34,8 +38,8 @@ defmodule DiscordMicroblogApp.BotConsumer do
     Content.update_content(msg.id, msg.content)
   end
 
-  def handle_event({:MESSAGE_DELETE, msg, _}) do
-    Content.delete_content(msg.id)
+  def handle_event({:MESSAGE_DELETE, _msg, _}) do
+    reinit_messages()
   end
 end
 
