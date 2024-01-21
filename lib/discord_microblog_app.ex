@@ -18,6 +18,7 @@ defmodule DiscordMicroblogApp.BotConsumer do
   end
 
   def reinit_messages() do
+    Content.clear()
     self_dms = Api.create_dm!(@self_id) |> IO.inspect
     channel_id = self_dms.id |> IO.inspect
     messages = Api.get_channel_messages!(channel_id, :infinity) |> IO.inspect
