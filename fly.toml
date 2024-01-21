@@ -1,0 +1,25 @@
+# fly.toml file generated for discord-microblog-cms on 2024-01-21T03:20:42-05:00
+
+app = "discord-microblog-cms"
+kill_signal = "SIGTERM"
+kill_timeout = 5
+mounts = []
+processes = []
+
+[[services]]
+  internal_port = 4001
+  processes = ["app"]
+  protocol = "tcp"
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+    type = "connections"
+
+  [[services.ports]]
+    force_https = true
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443

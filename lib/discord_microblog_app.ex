@@ -21,7 +21,7 @@ defmodule DiscordMicroblogApp.BotConsumer do
     self_dms = Api.create_dm!(@self_id) |> IO.inspect
     channel_id = self_dms.id |> IO.inspect
     messages = Api.get_channel_messages!(channel_id, :infinity) |> IO.inspect
-    for message <- messages, do: Content.add_content(message)
+    for message <- Enum.reverse(messages), do: Content.add_content(message)
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _}) do

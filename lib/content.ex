@@ -46,12 +46,14 @@ defmodule DiscordMicroblogApp.Content do
     Agent.update(__MODULE__, fn contents ->
       entry_idx = contents.message_indices[message_id]
       new_entries = 
-        Enum.reduce(entry_idx+1..contents.length, contents.entries, fn idx, acc ->
+        Enum.reduce(entry_idx+1..contents.length-1, contents.entries, fn idx, acc ->
           Map.put(acc, idx-1, contents.entries[idx])
         end)
       message_indices = 
-        Enum.reduce(entry_idx+1..contents.length, contents.message_indices, fn idx, acc ->
-          Map.put(acc, contents.entries[idx].message_id, idx-1)
+        Enum.reduce(entry_idx+1..contents.length-1, contents.message_indices, fn idx, acc ->
+          if contents.entries[idx] != nil do
+            Map.put(acc, contents.entries[idx].message_id, idx-1)
+          end
         end)
 
       %Content{
